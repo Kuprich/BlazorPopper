@@ -1,0 +1,25 @@
+﻿@page "/"
+@inject PopperService _popperService
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+
+<button @ref=reference id="button" aria-describedby="tooltip">My button</button>
+<div @ref=popper id="tooltip" role="tooltip">My tooltip</div>
+
+@code{
+    protected ElementReference reference; 
+    protected ElementReference popper;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender){
+        if (firstRender)
+        {
+            var options = new Options() { Placement = Placement.RightStart };
+            await _popperService.CreatePopperAsync(reference, popper, options);
+        }
+    }
+}
