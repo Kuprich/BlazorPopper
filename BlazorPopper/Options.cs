@@ -1,4 +1,5 @@
 ﻿using BlazorPopper.Utils;
+using Microsoft.JSInterop;
 using System.ComponentModel;
 using System.Text.Json.Serialization;
 
@@ -14,6 +15,18 @@ public class Options
     [JsonPropertyName("strategy")]
     public Strategy Strategy { get; set; } = Strategy.Absolute;
 
+    [JsonIgnore]
+    public Action<State>? OnFirstUpdate { get; set; }
+
+    [JSInvokable("CallOnFirstUpdate")]
+    public void CallOnFirstUpdate(State state) => OnFirstUpdate?.Invoke(state);
+}
+
+public class State
+{
+    [JsonConverter(typeof(EnumDescriptionConverter<Placement>))]
+    [JsonPropertyName("placement")]
+    public Placement Placement { get; set; } = Placement.Bottom;
 }
 
 public enum Placement

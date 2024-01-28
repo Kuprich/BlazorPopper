@@ -9,17 +9,27 @@ Welcome to your new app.
 
 
 <button @ref=reference id="button" aria-describedby="tooltip">My button</button>
-<div @ref=popper id="tooltip" role="tooltip">My tooltip</div>
+<div @ref=popper id="tooltip" role="tooltip">@popperString</div>
 
 @code{
     protected ElementReference reference; 
     protected ElementReference popper;
+    protected string? popperString;
 
     protected override async Task OnAfterRenderAsync(bool firstRender){
         if (firstRender)
         {
-            var options = new Options() { Placement = Placement.RightStart };
+            var options = new Options()
+                {
+                    Placement = Placement.Left,
+                    OnFirstUpdate = (state) =>
+                    {
+                        popperString = state.Placement.ToString();
+                        StateHasChanged();
+                    }
+                };
             await _popperService.CreatePopperAsync(reference, popper, options);
+            StateHasChanged();
         }
     }
 }
